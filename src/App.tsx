@@ -1,24 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 function App() {
+  const [rooms, setRooms] = useState<any>([]);
+  useEffect(() => {
+    const getClasses = async () => {
+      const res = await axios.get('http://localhost:4000/classes');
+      if (res.data) {
+        setRooms(res.data);
+      }
+    };
+    getClasses();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <ul>
+        {rooms.length > 0 &&
+          rooms.map((room: any) => <li key={room.name}>{room.name}</li>)}
+      </ul>
     </div>
   );
 }
