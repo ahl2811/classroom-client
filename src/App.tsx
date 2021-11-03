@@ -1,26 +1,28 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { SERVER_URL } from './common/constants';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import './App.css';
+import ProtectedRoute from './components/ProtectedRoute';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import RoomsPage from './pages/RoomsPage';
+import { AppProvider } from './store/store';
 
 function App() {
-  const [rooms, setRooms] = useState<any>([]);
-  useEffect(() => {
-    const getClasses = async () => {
-      const res = await axios.get(SERVER_URL);
-      if (res.data) {
-        setRooms(res.data);
-      }
-    };
-    getClasses();
-  }, []);
-
   return (
-    <div>
-      <ul>
-        {rooms.length > 0 &&
-          rooms.map((room: any) => <li key={room.name}>{room.name}</li>)}
-      </ul>
-    </div>
+    <AppProvider>
+      <Router>
+        <Switch>
+          <ProtectedRoute path="/" exact>
+            <RoomsPage />
+          </ProtectedRoute>
+          <Route path="/login" component={LoginPage} />
+          <Route path="/register" component={RegisterPage} />
+        </Switch>
+      </Router>
+    </AppProvider>
   );
 }
 
